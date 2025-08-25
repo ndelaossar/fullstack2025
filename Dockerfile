@@ -27,14 +27,13 @@ COPY src/ ./src/
 
 # Build the application
 RUN npm run build
+# Install serve globally
+RUN npm install -g serve
 
 # ===== STAGE 3: Production =====
 FROM node:15.14.0-slim AS production
 
 WORKDIR /app
-
-# Install serve globally
-RUN npm install -g serve
 
 # Copy built application from builder stage
 COPY --from=builder /app/build ./build
