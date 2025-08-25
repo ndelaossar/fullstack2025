@@ -81,7 +81,7 @@ jobs:
           platform: linux/amd64, linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rdicidr:latest
-            
+
       - name: Validate steps
         if: always()
         run: |

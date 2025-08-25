@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name:  production
+  name: production
 ---
 # https://kubernetes.io/docs/concepts/configuration/secret/
 apiVersion: v1
@@ -32,17 +32,17 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: fullstack-app
-        image: pinoched/rdicidr:latest
-        ports:
-        - containerPort: 8080
-          name: fullstack-app
-        env:
-        - name: MY_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: fullstack-secret
-              key: MY_SECRET
+        - name: fullstack-app
+          image: pinoched/rdicidr:latest
+          ports:
+            - containerPort: 8080
+              name: fullstack-app
+          env:
+            - name: MY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fullstack-secret
+                  key: MY_SECRET
 ---
 # https://kubernetes.io/docs/concepts/services-networking/service/
 apiVersion: v1
@@ -55,8 +55,8 @@ spec:
     app: fullstack-app
   type: LoadBalancer
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
 ---
 # https://kubernetes.io/docs/concepts/services-networking/ingress/
 apiVersion: networking.k8s.io/v1
@@ -66,14 +66,15 @@ metadata:
   namespace: production
 spec:
   rules:
-  - host: fsl-challenge.me
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: fullstack-service
-            port:
-              number: 80
+    - host: fsl-challenge.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fullstack-service
+                port:
+                  number: 80
 ---
+
