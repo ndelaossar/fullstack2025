@@ -5,7 +5,12 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-
+permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository.
+      contents: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,7 +18,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
       - name: Github sha
         id: github_sha
         run: echo "sha=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
@@ -34,7 +41,15 @@ jobs:
 
       - name: Run Prettier
         id: run_prettier
-        run: npm run prettier
+        uses: actionsx/prettier@v2
+        with:
+          args: --write .
+      - name: Commit changes from prettier
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "Format code with Prettier"
+          branch: ${{ github.head_ref }}
+          push_options: '--force'
 
       - name: Run tests
         id: run_tests
