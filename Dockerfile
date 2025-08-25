@@ -40,12 +40,12 @@ RUN npm install -g serve
 COPY --from=builder /app/build ./build
 
 # Create non-root user for security
-RUN addgroup -g 1001 -S appuser
-RUN adduser -S appuser -u 1001
+# RUN addgroup -g 1001 -S appuser
+# RUN adduser -S appuser -u 1001
 
 # Change ownership of the app directory
-RUN chown -R appuser:appuser /app
-USER appuser
+# RUN chown -R appuser:appuser /app
+# USER appuser
 
 # Expose port 8080 to match the CMD
 EXPOSE 8080
